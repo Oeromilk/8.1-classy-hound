@@ -3,7 +3,27 @@ var React = require('react');
 var TemplateComponent = require('./template.jsx').TemplateComponent;
 
 var CartComponent = React.createClass({
+  handleRemove: function() {
+    localStorage.removeItem('cartItem');
+    console.log('I have been clicked');
+  },
   render: function(){
+    var self = this;
+    var product = JSON.parse(localStorage.getItem('cartItem'));
+    var products = [];
+    products.push(product);
+
+    var orderListing = products.map(function(product){
+      return (
+        <tr key={product.title}>
+          <th>{product.title}</th>
+          <td>Still in work</td>
+          <td>Still in work</td>
+          <td>Still in work</td>
+          <td><button onClick={self.handleRemove} type="button" className="btn btn-warning">Remove</button></td>
+        </tr>
+      );
+    });
     return (
       <div className="container">
         <div className="row">
@@ -18,27 +38,7 @@ var CartComponent = React.createClass({
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td><button type="button" className="btn btn-warning">Remove</button></td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td><button type="button" className="btn btn-warning">Remove</button></td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-                <td><button type="button" className="btn btn-warning">Remove</button></td>
-              </tr>
+              {orderListing}
             </tbody>
           </table>
         </div>
