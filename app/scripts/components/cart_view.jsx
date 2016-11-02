@@ -9,11 +9,12 @@ var CartComponent = React.createClass({
   },
   render: function(){
     var self = this;
-    var product = JSON.parse(localStorage.getItem('cartItem'));
-    var products = [];
-    products.push(product);
+    // var product = JSON.parse(localStorage.getItem('cartItem'));
+    // var products = [];
+    // products.push(product);
+    console.log(this.props.cart);
 
-    var orderListing = products.map(function(product){
+    var orderListing = this.props.cart.map(function(product){
       return (
         <tr key={product.title}>
           <th>{product.title}</th>
@@ -48,10 +49,17 @@ var CartComponent = React.createClass({
 });
 
 var CartContianer = React.createClass({
+  getInitialState: function(){
+    var cart = JSON.parse(localStorage.getItem('cartItem'));
+    console.log(cart);
+    return {
+      cart: cart
+    }
+  },
   render: function(){
     return (
       <TemplateComponent>
-        <CartComponent />
+        <CartComponent cart={this.state.cart}/>
       </TemplateComponent>
     );
   }

@@ -52,7 +52,8 @@ var Modal = React.createClass({
 
 var CatalogBanner = React.createClass({
   showModal: function(){
-    ReactDom.findDOMNode(this.refs.modal).value;
+    //ReactDOM.findDOMNode(this.refs.modal);
+    console.log(this.refs);
   },
   render: function(){
     return (
@@ -62,7 +63,7 @@ var CatalogBanner = React.createClass({
           <p>We won't be this crazy ever again!</p>
           <p>Seriously you only have 10 minutes.</p>
           <button onClick={this.showModal} type="button" className="btn btn-success btn-lg">Log In</button>
-          <Modal ref="modal" />
+          <Modal refs="modal" />
         </div>
       </div>
     );
@@ -107,14 +108,21 @@ var ProductComponent = React.createClass({
 });
 
 var AppContainer = React.createClass({
+  getInitialState: function(){
+    var cart = [];
+    return {
+      cart: cart
+    }
+  },
   addToCart: function(product){
-    localStorage.setItem('cartItem', JSON.stringify(product));
-    console.log(localStorage.getItem('cartItem'));
+    this.state.cart.push(product);
+    localStorage.setItem('cartItem', JSON.stringify(this.state.cart));
+    console.log(this.state.cart);
   },
   render: function(){
     return (
       <TemplateComponent>
-        <CatalogBanner />
+        <CatalogBanner refs="modal"/>
         <ProductComponent productData={productData} addToCart={this.addToCart}/>
       </TemplateComponent>
     );
