@@ -1,59 +1,42 @@
 var React = require('react');
 var ReactDom = require('react-dom');
+var Modal = require('react-modal');
 var $ = require('jquery');
 require('react-bootstrap');
 
 var TemplateComponent = require('./template.jsx').TemplateComponent;
 var productData = require('../product_data.js');
 
-var ModalHeader = React.createClass({
-  render: function(){
-    return (
-      <div className="modal-header">
-        <h4 className="modal-title">Enter your Username below.</h4>
-      </div>
-    );
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
   }
-});
+};
 
-var ModalBody = React.createClass({
-  render: function(){
-    return (
-      <div className="modal-body">
-        <input type="button" name="name" value="" />
-      </div>
-    );
-  }
-});
-
-var ModalFooter = React.createClass({
-  render: function(){
-    return (
-      <div className="modal-footer">
-        <button type="button" className="btn btn-success">Log In</button>
-      </div>
-    );
-  }
-});
-
-var Modal = React.createClass({
-  render: function() {
-    return (
-      <div className="modal fade" tabIndex="-1" ref="modal" role="dialog" aria-labelledby="mySmallModalLabel">
-        <div className="modal-dialog modal-sm" role="document">
-          <ModalHeader />
-          <ModalBody />
-          <ModalFooter />
-        </div>
-      </div>
-    );
-  }
-});
 
 var CatalogBanner = React.createClass({
-  showModal: function(){
-    //ReactDOM.findDOMNode(this.refs.modal);
-    console.log(this.refs);
+  getInitialState: function() {
+    return {
+      modalIsOpen: false,
+      username: ''
+    };
+  },
+  openModal: function() {
+    this.setState({modalIsOpen: true});
+  },
+  afterOpenModal: function() {
+    // references are now sync'd and can be accessed.
+    this.refs.subtitle.style.color = '#f00';
+  },
+  closeModal: function(e) {
+    this.setState({modalIsOpen: false,
+    username: e.target.value});
+    localStorage.setItem('loggedIn', this.state.username);
   },
   render: function(){
     return (
@@ -62,9 +45,25 @@ var CatalogBanner = React.createClass({
           <h1>Classy Hound T-shirt Deals!</h1>
           <p>We won't be this crazy ever again!</p>
           <p>Seriously you only have 10 minutes.</p>
-          <button onClick={this.showModal} type="button" className="btn btn-success btn-lg">Log In</button>
-          <Modal refs="modal" />
+          <button onClick={this.openModal} type="button" className="btn btn-success btn-lg">Log In</button>
         </div>
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+
+          <h2>Please Log In</h2>
+            <form className="form-inline">
+              <div className="form-group">
+                <label htmlFor="userName">Name</label>
+                <input type="text" className="form-control" id="userName" placeholder="Username" />
+              </div>
+              <button onClick={this.closeModal} type="submit" value={this.state.username} className="btn btn-primary">Save Username</button>
+            </form>
+        </Modal>
       </div>
     );
   }
@@ -122,7 +121,7 @@ var AppContainer = React.createClass({
   render: function(){
     return (
       <TemplateComponent>
-        <CatalogBanner refs="modal"/>
+        <CatalogBanner />
         <ProductComponent productData={productData} addToCart={this.addToCart}/>
       </TemplateComponent>
     );
