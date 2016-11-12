@@ -1,4 +1,20 @@
 var React = require('react');
+var moment = require('moment');
+
+var a = moment.duration(10, 'minutes');
+var b = moment.duration(1, 'seconds');
+var time = 7200;
+var duration = moment.duration(time * 1000, 'milliseconds');
+var interval = 1000;
+
+// setInterval(function(){
+//   duration = moment.duration(duration.asMilliseconds() - interval, 'milliseconds');
+//   var time = moment(duration(asMilliseconds()).format('h:mm:ss'));
+//   console.log(time);
+// }, interval);
+
+// var newTimer = setTimer(a, b);
+// console.log(a.get('minutes'));
 
 var TemplateComponent = require('./template.jsx').TemplateComponent;
 
@@ -18,8 +34,8 @@ var CartComponent = React.createClass({
       return (
         <tr key={product.title}>
           <th>{product.title}</th>
-          <td>Still in work</td>
-          <td>Still in work</td>
+          <td>{product.size}</td>
+          <td>{product.qty}</td>
           <td>Still in work</td>
           <td><button onClick={self.handleRemove} type="button" className="btn btn-warning">Remove</button></td>
         </tr>

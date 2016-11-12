@@ -73,6 +73,7 @@
     ]
   },
   "dependencies": {
+    "moment": "^2.16.0",
     "react-modal": "^1.5.2"
   }
 }

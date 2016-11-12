@@ -7,6 +7,7 @@ require('react-bootstrap');
 var TemplateComponent = require('./template.jsx').TemplateComponent;
 var productData = require('../product_data.js');
 
+//imported from react modal documentation
 const customStyles = {
   content : {
     top                   : '50%',
@@ -70,6 +71,20 @@ var CatalogBanner = React.createClass({
 });
 
 var ProductComponent = React.createClass({
+  getInitialState: function(){
+    var size;
+    var quantity;
+    return {
+      size: size,
+      quantity: quantity
+    };
+  },
+  handleSize: function(e){
+    this.setState({size: e.target.value});
+  },
+  handleQuantity: function(e){
+    this.setState({quantity: e.target.value});
+  },
   render: function(){
     var self = this;
     var productListing = this.props.productData.map(function(product){
@@ -81,15 +96,15 @@ var ProductComponent = React.createClass({
               <h3>{product.title}</h3>
               <p>{product.description}</p>
               <div className="form-inline">
-                <input type="text" className="form-control" placeholder="Quantity" />
-                  <select className="form-control col-md-3">
+                <input onChange={self.handleQuantity} type="text" className="form-control" placeholder="Quantity" />
+                  <select onChange={self.handleSize} className="form-control col-md-3">
                     <option>XS</option>
                     <option>S</option>
                     <option>M</option>
                     <option>L</option>
                     <option>XL</option>
                   </select>
-                <button onClick={function(){self.props.addToCart(product)}} className="btn btn-primary">Add to Cart</button>
+                <button onClick={function(){self.props.addToCart(product, self.state.size, self.state.quantity)}} className="btn btn-primary">Add to Cart</button>
               </div>
             </div>
           </div>
@@ -113,10 +128,12 @@ var AppContainer = React.createClass({
       cart: cart
     }
   },
-  addToCart: function(product){
+  addToCart: function(product, size, qty){
+    product["size"] = size;
+    product["qty"] = qty;
     this.state.cart.push(product);
     localStorage.setItem('cartItem', JSON.stringify(this.state.cart));
-    console.log(this.state.cart);
+    console.log('cart', this.state.cart);
   },
   render: function(){
     return (
